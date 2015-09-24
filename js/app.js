@@ -1,19 +1,17 @@
 var config = require('../config.json');
 var L = require('leaflet');
 require('leaflet-providers');
+require('esri-leaflet');
 
-var grayscale = L.tileLayer.provider('CartoDB.Positron');
+var grayscale = L.esri.basemapLayer('Gray');
+var grayscaleLabels = L.esri.basemapLayer('GrayLabels');
 
 var map = L.map('map', {
     center: config.map_center, // Austin!
     zoom: 12,
     scrollWheelZoom: false,
-    layers: [grayscale],
+    layers: [grayscale, grayscaleLabels],
 });
-
-var baseMaps = {
-    'Grayscale': grayscale,
-};
 
 // Adding Census Tract Shapefiles to Map
 debugger
@@ -66,7 +64,8 @@ var overlayMaps = {
     'Parks': parkLayer,
 };
 
-L.control.layers(baseMaps, overlayMaps, {
+// no need to pass basemaps to this control since there isn't another option to toggle
+L.control.layers(null, overlayMaps, {
     collapsed: true,
     autoZIndex: true,
 }).addTo(map);
