@@ -1,5 +1,9 @@
 {
+  "citySDK_token" : "58211e2426331117ab16deabbfe10b226b95b61b",
   "map_center" : [30.26618, -97.74467],
+  "city_lat" : 30.26618,
+  "city_lng" :  -97.74467,
+  "zoom_level" : 12,
   "colors" : {
       "purple5" : "rgb(64,0,75)",
       "purple4" : "rgb(118,42,131)",

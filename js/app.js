@@ -1,39 +1,18 @@
 var config = require('../config.json');
+var $ = require('jquery');
 var L = require('leaflet');
 require('leaflet-providers');
+require('esri-leaflet');
 
-var grayscale = L.tileLayer.provider('CartoDB.Positron');
+var grayscale = L.esri.basemapLayer('Gray');
+var grayscaleLabels = L.esri.basemapLayer('GrayLabels');
 
 var map = L.map('map', {
-    center: config.map_center, // Austin!
-    zoom: 12,
+    center: config.map_center,
+    zoom: config.zoom_level,
     scrollWheelZoom: false,
-    layers: [grayscale],
+    layers: [grayscale, grayscaleLabels]
 });
-
-var baseMaps = {
-    'Grayscale': grayscale,
-};
-
-// Adding Census Tract Shapefiles to Map
-debugger
-var censusLayer = L.geoJson(censusTract, {
-    style: function style(feature) {
-        return {
-            // fillColor: getColor(feature.demographics.needScore),
-            weight: 1,
-            opacity: 1,
-            color: config.colors.purple4,
-            fillColor: "transparent",
-            dashArray: '3',
-            fillOpacity: 0.7,
-        };
-    },
-    onEachFeature: onEachCensusFeature,
-}).addTo(map);
-censusLayer.bringToBack();
-
-function onEachCensusFeature(feature, layer) {}
 
 // adding parks shapefiles to Map
 var parkLayer = L.geoJson(parks, {
@@ -62,11 +41,85 @@ function onEachParkFeature(feature, layer) {
     }
   };
 
-var overlayMaps = {
-    'Parks': parkLayer,
+
+//------------
+// Census SDK
+var sdk = new CitySDK();
+var censusModule = sdk.modules.census;
+censusModule.enable(config.citySDK_token);
+
+
+var request = {
+  "lat": config.city_lat,
+  "lng": config.city_lng,
+  "level": "county",
+  "sublevel": "true",
+  "variables": [
+    "income",
+    "population",
+    "poverty",
+    "C27012_001E" // Total Health Insurance Coverage Status and Type by Work Experience by Age
+    // "B27001_001E" // Total Health Insurance Coverage Status by Sex by Age
+    // Population under 18
+    // Population over 60
+    // Housing Density
+  ]
 };
 
-L.control.layers(baseMaps, overlayMaps, {
+var censusLayer = L.geoJson().addTo(map);
+
+L.Util.setOptions(censusLayer, {
+  style: {
+    weight: 1,
+    opacity: 1,
+    color: config.colors.purple4,
+    fillColor: "transparent",
+    dashArray: '3',
+    fillOpacity: 0.7
+  },
+  onEachFeature: onEachCensusFeature
+});
+
+censusModule.GEORequest(request, function (response) {
+
+  window.CensusData = response;
+
+  response.features.forEach(function(f) {
+    censusLayer.addData(f);
+    removeLoadingIcon();
+  })
+});
+
+function onEachCensusFeature(feature, layer) {
+  var name = feature.properties.NAME;
+  var population = Number(feature.properties.population);
+  var poverty = Number(feature.properties.poverty) / population * 100;
+  var insurance = Number(feature.properties.C27012_001E) / population * 100;
+  var popupContent = '<li>Poverty Rate: ' + poverty.toFixed(2) + '%</li> \
+                      <li>Health Insurance Coverage: ' + insurance.toFixed(2) + '%</li>';
+
+
+  if (feature.properties) {
+      layer.bindPopup(popupContent);
+      layer.on('click', function(e){
+        $(".data-list").empty();
+        $(".data-list").append(popupContent);
+      })
+  }
+};
+
+function removeLoadingIcon(){
+  $(".loading").remove();
+  $(".data").removeClass("hidden");
+}
+
+// Leaflet UI Controls
+var overlayMaps = {
+    'Parks': parkLayer,
+    'Census Tracts': censusLayer
+};
+
+L.control.layers(null, overlayMaps, {
     collapsed: true,
     autoZIndex: true,
 }).addTo(map);

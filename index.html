@@ -40,7 +40,16 @@
 		<div id="map" class="map"></div>
 		<div class="aside">
 			<div class="side-container">
-  <h1>This is where graphs will appear and do magic.</h1>
+  <div class="loading">
+    <p>Loading data from Census.gov</p>
+    <img src="img/loading_spinner.gif" alt="Loading State Icon" />
+  </div>
+  <div class="data hidden">
+    <ul class="data-list">
+      <p>Click on a Census Tract to reveal data.</p>
+
+    </ul>
+  </div>
 </div>
 
 		</div>
@@ -54,6 +63,11 @@
 <script src="data/deprecated/cost-distance-developed.geojson"></script>
 <script src="data/deprecated/osm-parks-filtered.js"></script>
 
+
+	<!-- TODO: include these scripts into Webpack build process -->
+	<script type="text/javascript" src="js/citysdk.js"></script>
+	<script type="text/javascript" src="js/citysdk.census.js"></script>
+	<script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
 
 	<!-- Bundled Javscript -->
 	<script type="text/javascript" src="dist/main.bundle.js" charset="utf-8"></script>
