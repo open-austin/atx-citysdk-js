@@ -97,6 +97,10 @@ a:visited {
   color: #6D4073;
 }
 
+.hidden {
+  display: none;
+}
+
 .main-content-wrapper {
   height: 100%;
 }
