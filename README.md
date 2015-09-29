@@ -12,6 +12,8 @@ Often times, this data will be in a format best for analysis with desktop GIS so
 
 **Fork the repo**: Did you find a `.geojson`, `.json`, `.shp` (Shapefile), or `.kml` file with park polygons? Awesome. We'll make sure to convert that data into the best format in a later step. Now, you should go ahead and fork this repo to your own Github account. Once you've forked the repo and cloned it down from your own Github repo to your local machine, go ahead and follow the steps below...
 
+If you couldn't find some park data, but you still want to play along. Try using [this data](https://data.oaklandnet.com/Environmental/East-Bay-Regional-Parks/f4af-gmsw) from Oakland.
+
 ## 2. Running Code Locally
 
 **1. [npm](https://www.npmjs.com/) is required**
@@ -38,12 +40,12 @@ To bundle assets, run the local server and see the app in your browser:
 NPM will serve the app at `http://localhost:8080`.
 
 ## 3. Import you own park data
-Back in Step 1, we wanted to make sure you could find park data from your city. Now's the time to import it into the app. We save our GIS file into a directory called `/data`. See that directory [here on Github](https://github.com/open-austin/atx-citysdk-js/tree/master/data). Now that your raw data is imported, its time to convert your data to `.geojson` (if its not already). I suggest you follow the instructions in [this blog](http://ben.balter.com/2013/06/26/how-to-convert-shapefiles-to-geojson-for-use-on-github/) if you haven't used `ogr2ogr` or coverted Shapefiles to geojson before.
+Back in Step 1, we wanted to make sure you could find park data from your city. Now's the time to import it into the app. We save our GIS file into a directory called `/data`. See that directory [here on Github](https://github.com/open-austin/atx-citysdk-js/tree/master/data). Now that your raw data is imported, its time to convert your data to `.geojson` (if its not already). I suggest you follow the instructions in [this blog](http://ben.balter.com/2013/06/26/how-to-convert-shapefiles-to-geojson-for-use-on-github/) if you haven't used `ogr2ogr` or coverted Shapefiles to geojson before. **Last step here**, rename your file to `parks.geojson`. This is what the code is expecting that park layer to be called. You'll need to either delete or rename the Austin park layer that came down with the repo. 
 
 ## 4. Config and customize the app to your city
-_Update app.js file_
+**Update the config file**. Go into the [config file](https://github.com/open-austin/atx-citysdk-js/blob/master/config.json) and update things like the coordinates of your city and your own CitySDK token (which you should [request here](http://api.census.gov/data/citysdk.html)). 
 
-_Update config file_
+**Build new features**. Add new features. The main javascript code live in the `js/app.js` [file](https://github.com/open-austin/atx-citysdk-js/blob/master/js/app.js)
 
 
 ## Austin Data Sources:
