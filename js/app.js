@@ -1,6 +1,8 @@
 var config = require('../config.json');
 var $ = require('jquery');
 var L = require('leaflet');
+var _ = require('lodash');
+var parks = require("../data/parks.geojson");
 require('leaflet-providers');
 require('esri-leaflet');
 
