@@ -590,3 +590,8 @@ section#content {
 .side-container {
   margin-top: 32px;
 }
+
+.loading {
+  text-align: center;
+  padding-top: 10px;
+}
