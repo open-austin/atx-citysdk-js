@@ -1,45 +1,49 @@
 # CitySDK Austin Parks
 
-### This is a demonstration app forked from [Austin Park Equity](http://austinparkequity.com) to give a mapping example using API open data from Census.gov.
+### This is a demonstration app forked from [Austin Park Equity](http://austinparkequity.com) to give a mapping example using the CitySDK from Census.gov. We'd love for you to try to plug in data from your city.
 
-## Running Code Locally:
+See what the [live Austin demo](http://open-austin.github.io/atx-citysdk-js/) lookes like.
+
+## 1. Getting Started
+
+**Find park data**: The first thing you should do is look for park data from your city. Many cities and counties have a data portal. In Austin, we found raw park GIS data through [the City's Socrata Open Data Portal](https://data.austintexas.gov/dataset/City-Of-Austin-Parks/99qw-4ixs).
+
+Often times, this data will be in a format best for analysis with desktop GIS software. For this web map, the ideal data type is `geojson`. But if it is in Shapefile format, that is ok too. But we'll worry about converting the file type later. _Check out [this blog post](http://ben.balter.com/2013/06/26/how-to-convert-shapefiles-to-geojson-for-use-on-github/) to learn why `.geojson` is nice and to learn how to convert data into geojson._
+
+**Fork the repo**: Did you find a `.geojson`, `.json`, `.shp` (Shapefile), or `.kml` file with park polygons? Awesome. We'll make sure to convert that data into the best format in a later step. Now, you should go ahead and fork this repo to your own Github account. Once you've forked the repo and cloned it down from your own Github repo to your local machine, go ahead and follow the steps below...
+
+## 2. Running Code Locally
 
 **1. [npm](https://www.npmjs.com/) is required**
 
 _npm is Node's package manager. You can install Node at [their site](https://nodejs.org/download/) or with a command like `brew install node` if you use Homebrew._
 
-**2. [gulp](http://gulpjs.com/) is required**
-
-_gulp is used to build and run the app. Before you can serve the app locally, you need to install gulp cli:_
-
-	$ npm install -g gulp
-
-**3. [webpack](https://webpack.github.io/docs/tutorials/getting-started/) is required**
+**2. [webpack](https://webpack.github.io/docs/tutorials/getting-started/) is required**
 _webpack is used to bundle assets_
 
 	$ npm install -g webpack
 
-To bundle assets:
-
- 	$ webpack --watch
-
-**4. [compass](http://compass-style.org/) is required**
-
-_compass is a css authoring framework that is used to generate css used by the app. Follow the [install instructions](http://compass-style.org/install/) on the compass site._
-
-**5. install npm dependencies**
+**3. install npm dependencies**
 
 Install the npm dependencies:
 
 	$ npm install
 
-**6. run the development server**
+**4. run the build system && development server**
 
-To run the local server and see the app in your browser:
+To bundle assets, run the local server and see the app in your browser:
 
-	$ gulp
+	$ npm start
 
-Gulp serves the app at `http://localhost:8080`.
+NPM will serve the app at `http://localhost:8080`.
+
+## 3. Import you own park data
+Back in Step 1, we wanted to make sure you could find park data from your city. Now's the time to import it into the app. We save our GIS file into a directory called `/data`. See that directory [here on Github](https://github.com/open-austin/atx-citysdk-js/tree/master/data). Now that your raw data is imported, its time to convert your data to `.geojson` (if its not already). I suggest you follow the instructions in [this blog](http://ben.balter.com/2013/06/26/how-to-convert-shapefiles-to-geojson-for-use-on-github/) if you haven't used `ogr2ogr` or coverted Shapefiles to geojson before.
+
+## 4. Config and customize the app to your city
+_Update app.js file_
+
+_Update config file_
 
 
 ## Austin Data Sources:
