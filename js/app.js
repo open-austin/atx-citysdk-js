@@ -5,6 +5,7 @@ var _ = require('lodash');
 var parks = require("../data/parks.geojson");
 require('leaflet-providers');
 require('esri-leaflet');
+var turf = require('turf');
 
 var grayscale = L.esri.basemapLayer('Gray');
 var grayscaleLabels = L.esri.basemapLayer('GrayLabels');
@@ -49,7 +50,6 @@ function onEachParkFeature(feature, layer) {
 var sdk = new CitySDK();
 var censusModule = sdk.modules.census;
 censusModule.enable(config.citySDK_token);
-
 
 var request = {
   "lat": config.city_lat,
@@ -109,6 +109,19 @@ censusModule.GEORequest(request, function (response) {
   })
 });
 
+function calcParkProportion(feature) {
+  // get acreage of census block, clip overlapping parks and divide
+  var blockArea = turf.area(feature);
+  var overlapArea = 0;
+  for (i=0;i<parks.features.length;i++) {
+    var overlap = turf.intersect(feature, parks.features[i])
+    if (overlap) {
+      overlapArea += turf.area(overlap);
+    }
+  }
+  return (overlapArea/blockArea*100)
+}
+
 function onEachCensusFeature(feature, layer) {
   var name = feature.properties.NAME;
   var population = Number(feature.properties.population);
@@ -143,10 +156,13 @@ function onEachCensusFeature(feature, layer) {
   var multiFamily = _.reduce(multiFamilyArray, function(total, n) {
     return total + feature.properties[n];
   });
+
+  var parkAreaPercentage = calcParkProportion(feature)
   
   var popupContent = '<li>Poverty Rate: ' + poverty.toFixed(2) + '%</li> \
                       <li>No Health Insurance Coverage: ' + insurance.toFixed(2) + '%</li> \
                       <li>Percent of Children (under 18): ' + kids.toFixed(2) + '%</li> \
+                      <li>Percent of Park Space: ' + parkAreaPercentage.toFixed(2) + '%</li> \
                       ';
 
   if (feature.properties) {
