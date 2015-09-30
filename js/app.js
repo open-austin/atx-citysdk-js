@@ -32,11 +32,9 @@ var parkLayer = L.geoJson(parks, {
 
 function onEachParkFeature(feature, layer) {
     var parkName = feature.properties.PARK_NAME;
-    var parkAcres = feature.properties.PARK_ACRES.toFixed(2);
-    var parkType = feature.properties.PARK_TYPE;
-    var popupContent = '<p><span class="park-title">' + parkName + '</span> \
-						<br>' + parkAcres + ' Acres \
-						<br>Park Type: ' + parkType + '</p>';
+    // var parkAcres = feature.properties.PARK_ACRES.toFixed(2);
+    // var parkType = feature.properties.PARK_TYPE;
+    var popupContent = '<p><span class="park-title">' + parkName + '</span>';
 
     if (feature.properties) {
         layer.bindPopup(popupContent);
@@ -143,7 +141,7 @@ function onEachCensusFeature(feature, layer) {
   var multiFamily = _.reduce(multiFamilyArray, function(total, n) {
     return total + feature.properties[n];
   });
-  
+
   var popupContent = '<li>Poverty Rate: ' + poverty.toFixed(2) + '%</li> \
                       <li>No Health Insurance Coverage: ' + insurance.toFixed(2) + '%</li> \
                       <li>Percent of Children (under 18): ' + kids.toFixed(2) + '%</li> \
