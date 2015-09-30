@@ -15,33 +15,31 @@ var sdk = new CitySDK();
 var censusModule = sdk.modules.census;
 censusModule.enable(config.citySDK_token);
 
-
 var request = {
   "lat": config.city_lat,
   "lng": config.city_lng,
   "level": "county",
   "sublevel": "true",
   "api" : "acs5",
-  // "year" : 2013,
   "variables": [
-    "population",         // Total Population
-    "income",             // Median Income
-    "poverty_family",     // Number of Families Below Poverty
-    "poverty",            // Number of x Below Poverty
-    "B01001_003E",	  // Male:!!Under 5 years
-    "B01001_004E",	  // Male:!!5 to 9 years
-    "B01001_005E",	  // Male:!!10 to 14 years
-    "B01001_006E",	  // Male:!!15 to 17 years
-    "B01001_027E",	  // Female:!!Under 5 years
-    "B01001_028E",	  // Female:!!5 to 9 years
-    "B01001_029E",	  // Female:!!10 to 14 years
-    "B01001_030E",	  // Female:!!15 to 17 years
-    "C27012_001E"         // Total Health Insurance Coverage Status and Type by Work Experience by Age
+    "population", // Total Population
+    "income", // Median Income
+    "poverty_family", // Number of Families Below Poverty
+    "poverty", // Number of x Below Poverty
+    "B01001_003E", // Male:!!Under 5 years
+    "B01001_004E", // Male:!!5 to 9 years
+    "B01001_005E", // Male:!!10 to 14 years
+    "B01001_006E", // Male:!!15 to 17 years
+    "B01001_027E", // Female:!!Under 5 years
+    "B01001_028E", // Female:!!5 to 9 years
+    "B01001_029E", // Female:!!10 to 14 years
+    "B01001_030E", // Female:!!15 to 17 years
+    "C27012_001E" // Total Health Insurance Coverage Status and Type by Work Experience by Age
   ]
 };
 
-censusModule.GEORequest(request, function (response) {
-   // do stuff
+censusModule.GEORequest(request, function callback(response) {
+   // Do stuff
 });
 ```
 
@@ -49,8 +47,13 @@ This cURL command would make the same type of request:
 
 ```
 $ curl 'http://api.census.gov/data/2013/acs5?get=NAME,B01003_001E,B19013_001E,B17012_002E,B17001_002E,B01001_003E,B01001_004E,B01001_005E,B01001_006E,B01001_027E,B01001_028E,B01001_029E,B01001_030E,C27012_001E&for=tract:*&in=county:453+state:48&key=YOUR_TOKEN'
-```
 
+GET http://api.census.gov/data/2013/acs5
+    get=NAME,B01003_001E,B19013_001E,B17012_002E,B17001_002E,B01001_003E,B01001_004E,B01001_005E,B01001_006E,B01001_027E,B01001_028E,B01001_029E,B01001_030E,C27012_001E
+    for=tract:*
+    in=county:453+state:48
+    key=YOUR_TOKEN
+```
 
 ## 1. Getting Started
 
