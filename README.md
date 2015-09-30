@@ -4,6 +4,65 @@
 
 See what the [live Austin demo](http://open-austin.github.io/atx-citysdk-js/) lookes like.
 
+## What is the CitySDK?
+
+CitySDK is a toolbox for civic innovators to connect local and national public data developed by the US Census Department. You should explore their [wonderful guides and documentation](http://uscensusbureau.github.io/citysdk/).
+
+ - [CitySDK](http://uscensusbureau.github.io/citysdk/)
+ - [CitySDK Guides](http://uscensusbureau.github.io/citysdk/guides.html)
+ - [CitySDK Code Examples](http://uscensusbureau.github.io/citysdk/examplecode.html)
+
+### Requests
+
+Here is an example of the request we are making for demographic data in Austin, Texas (Travis County):
+
+```js
+var sdk = new CitySDK();
+var censusModule = sdk.modules.census;
+censusModule.enable(config.citySDK_token);
+
+var request = {
+  "lat": config.city_lat,
+  "lng": config.city_lng,
+  "level": "county",
+  "sublevel": "true",
+  "api" : "acs5",
+  "variables": [
+    "population",  // Total Population
+    "income",  // Median Income
+    "poverty_family",  // Number of Families Below Poverty
+    "poverty",  // Number of x Below Poverty
+    "B01001_003E",  // Male:!!Under 5 years
+    "B01001_004E",  // Male:!!5 to 9 years
+    "B01001_005E",  // Male:!!10 to 14 years
+    "B01001_006E",  // Male:!!15 to 17 years
+    "B01001_027E",  // Female:!!Under 5 years
+    "B01001_028E",  // Female:!!5 to 9 years
+    "B01001_029E",  // Female:!!10 to 14 years
+    "B01001_030E",  // Female:!!15 to 17 years
+    "C27012_001E",  // Total Health Insurance Coverage Status and Type by Work Experience by Age
+  ]
+};
+
+censusModule.GEORequest(request, function callback(response) {
+   // Do stuff
+});
+```
+
+This cURL command would make the same type of request:
+
+```sh
+$ curl 'http://api.census.gov/data/2013/acs5?get=NAME,B01003_001E,B19013_001E,B17012_002E,B17001_002E,B01001_003E,B01001_004E,B01001_005E,B01001_006E,B01001_027E,B01001_028E,B01001_029E,B01001_030E,C27012_001E&for=tract:*&in=county:453+state:48&key=YOUR_TOKEN'
+
+GET http://api.census.gov/data/2013/acs5
+    get=NAME,B01003_001E,B19013_001E,B17012_002E,B17001_002E,B01001_003E,B01001_004E,B01001_005E,B01001_006E,B01001_027E,B01001_028E,B01001_029E,B01001_030E,C27012_001E
+    for=tract:*
+    in=county:453+state:48
+    key=YOUR_TOKEN
+```
+
+# Forking this repo
+
 ## 1. Getting Started
 
 **Find park data**: The first thing you should do is look for park data from your city. Many cities and counties have a data portal. In Austin, we found raw park GIS data through [the City's Socrata Open Data Portal](https://data.austintexas.gov/dataset/City-Of-Austin-Parks/99qw-4ixs).
@@ -48,17 +107,17 @@ Back in Step 1, we wanted to make sure you could find park data from your city. 
 **Build new features**. Add new features. The main javascript code live in the `js/app.js` [file](https://github.com/open-austin/atx-citysdk-js/blob/master/js/app.js)
 
 
-## Austin Data Sources:
-- City of Austin, Parks and Rec Dept (PARD) Data
+## Austin Data Sources
+- City of Austin, Parks and Recreation Department (PARD) Data
 	- [Basic Park Feature Layer via ArcGIS Server](http://services.arcgis.com/0L95CJ0VTaxqcmED/ArcGIS/rest/services/city_of_austin_parks/FeatureServer/0/query?where=1%3D1&objectIds=&time=&geometry=&geometryType=esriGeometryPolygon&inSR=&spatialRel=esriSpatialRelIntersects&distance=&units=esriSRUnit_Meter&outFields=*&returnGeometry=true&maxAllowableOffset=&geometryPrecision=&outSR=&returnIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&resultOffset=&resultRecordCount=&returnZ=false&returnM=false&quantizationParameters=&f=pgeojson&token=)
 		- _Also available on [data.austintexas.gov](https://data.austintexas.gov/dataset/City-Of-Austin-Parks/99qw-4ixs)_
 		- This data is used across the app to produce park shapes.
 
-## Global Data Sources:
+## Global Data Sources
 - [Open Street Map](https://www.openstreetmap.org/) Park Data:
 	- We use the [Overpass API](http://wiki.openstreetmap.org/wiki/Overpass_API) via the ["query-overpass" plugin](https://github.com/perliedman/query-overpass) to extract data. Here's [the commit that added OSM data](https://github.com/open-austin/austin-park-equity/commit/a89bd02fce6170beac8dcf11c7a3f3479a71d047) if you're curious how.
 - Census.gov Data
 	-  [CitySDK API](http://uscensusbureau.github.io/citysdk/)
 
-## Unlicense:
+## Unlicense
 Released to the public domain under the [Unlicense](http://unlicense.org/) by [Open Austin](http://open-austin.org), 2015.
