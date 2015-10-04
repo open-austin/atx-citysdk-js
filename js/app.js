@@ -6,6 +6,7 @@ var parks = require("../data/parks.geojson");
 require('leaflet-providers');
 require('esri-leaflet');
 var turf = require('turf');
+var Chart = require('chart.js');
 
 var grayscale = L.esri.basemapLayer('Gray');
 var grayscaleLabels = L.esri.basemapLayer('GrayLabels');
@@ -157,12 +158,17 @@ function onEachCensusFeature(feature, layer) {
     return total + feature.properties[n];
   });
 
-  var parkAreaPercentage = calcParkProportion(feature)
-  
+  var featureData = {
+    "poverty": poverty.toFixed(2),
+    "insurance": insurance.toFixed(2),
+    "kids" : kids.toFixed(2)
+  };
+
+  // var parkAreaPercentage = calcParkProportion(feature)
+
   var popupContent = '<li>Poverty Rate: ' + poverty.toFixed(2) + '%</li> \
                       <li>No Health Insurance Coverage: ' + insurance.toFixed(2) + '%</li> \
                       <li>Percent of Children (under 18): ' + kids.toFixed(2) + '%</li> \
-                      <li>Percent of Park Space: ' + parkAreaPercentage.toFixed(2) + '%</li> \
                       ';
 
   if (feature.properties) {
@@ -170,6 +176,7 @@ function onEachCensusFeature(feature, layer) {
       layer.on('click', function(e){
         $(".data-list").empty();
         $(".data-list").append(popupContent);
+        createChart(featureData);
       })
   }
 };
@@ -177,7 +184,88 @@ function onEachCensusFeature(feature, layer) {
 function removeLoadingIcon(){
   $(".loading").remove();
   $(".data").removeClass("hidden");
-}
+};
+
+function createChart(featureData){
+  var ctx = document.getElementById("myChart").getContext("2d");
+
+  var data = {
+      labels: ["Poverty Rate", "No Health Insurance Coverage", "Percent of Children (under 18)"],
+      datasets: [
+          {
+              label: "My First dataset",
+              fillColor: "rgba(220,220,220,0.2)",
+              strokeColor: "rgba(220,220,220,1)",
+              pointColor: "rgba(220,220,220,1)",
+              pointStrokeColor: "#fff",
+              pointHighlightFill: "#fff",
+              pointHighlightStroke: "rgba(220,220,220,1)",
+              data: [featureData.poverty, featureData.insurance, featureData.kids]
+          }
+      ]
+  };
+
+  var options = {
+      //Boolean - Whether to show lines for each scale point
+      scaleShowLine : true,
+
+      //Boolean - Whether we show the angle lines out of the radar
+      angleShowLineOut : false,
+
+      //Boolean - Whether to show labels on the scale
+      scaleShowLabels : false,
+
+      // Boolean - Whether the scale should begin at zero
+      scaleBeginAtZero : true,
+
+      //String - Colour of the angle line
+      angleLineColor : "rgba(0,0,0,.1)",
+
+      //Number - Pixel width of the angle line
+      angleLineWidth : 1,
+
+      //String - Point label font declaration
+      pointLabelFontFamily : "'Arial'",
+
+      //String - Point label font weight
+      pointLabelFontStyle : "normal",
+
+      //Number - Point label font size in pixels
+      pointLabelFontSize : 10,
+
+      //String - Point label font colour
+      pointLabelFontColor : "#666",
+
+      //Boolean - Whether to show a dot for each point
+      pointDot : true,
+
+      //Number - Radius of each point dot in pixels
+      pointDotRadius : 3,
+
+      //Number - Pixel width of point dot stroke
+      pointDotStrokeWidth : 1,
+
+      //Number - amount extra to add to the radius to cater for hit detection outside the drawn point
+      pointHitDetectionRadius : 20,
+
+      //Boolean - Whether to show a stroke for datasets
+      datasetStroke : true,
+
+      //Number - Pixel width of dataset stroke
+      datasetStrokeWidth : 2,
+
+      //Boolean - Whether to fill the dataset with a colour
+      datasetFill : true,
+
+      //String - A legend template
+      legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<datasets.length; i++){%><li><span style=\"background-color:<%=datasets[i].strokeColor%>\"></span><%if(datasets[i].label){%><%=datasets[i].label%><%}%></li><%}%></ul>",
+      scaleOverride: true,
+      scaleSteps: 5,
+      scaleStepWidth: 20,
+      startScaleValue: 0
+  }
+  var myRadarChart = new Chart(ctx).Radar(data, options);
+};
 
 
 //--------------------
